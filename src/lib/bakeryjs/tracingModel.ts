@@ -377,16 +377,9 @@ export class TracingModel {
 			.get(parentMsgId)
 			.get(dimension)
 			.get(msgId).done = true;
-		// Delete all child dimensions (they are done, either)
-		this.dimensionStore.delete(msgId);
 
 		// if we are checking the root job (ugly way of checking dimension is [])
 		if (dimension.length === 0) {
-			// delete the root job (it has no "parent" to handle it)
-			this.msgStore
-				.get(parentMsgId)
-				.get(dimension)
-				.delete(msgId);
 			// call the done callback
 			this.jobDone(msgId);
 			return;
@@ -415,8 +408,6 @@ export class TracingModel {
 		}
 
 		this.dimensionStore.get(parentMsgId).get(dimension).done = true;
-		// delete child messages (they are `done`, either)
-		this.msgStore.get(parentMsgId).delete(dimension);
 
 		// I wan't to check my parent message for completeness. However,
 		// I don't have its key in the store (superParent, parentDim, parentMsgId).
